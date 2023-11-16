@@ -18,7 +18,7 @@ function App() {
   return (
     <div className="flex justify-center h-screen">
       {user ? (
-        <Chat user={user} />
+        <NavBar user={user} />
       ) : (
         <Auth onSignIn={handleSignIn} /> 
       )}

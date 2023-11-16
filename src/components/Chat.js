@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { collection, addDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../app/firebase'
 import {Button, ButtonGroup} from "@nextui-org/react";
-
+import { Link } from "@nextui-org/react"
 
 function Chat({ user }) {
 
@@ -40,15 +40,17 @@ function Chat({ user }) {
     return (
         <div className="flex flex-col justify-center items-between h-full">
                 <nav className="flex justify-between items-between h-1/3">
-                    <a>
+                <Link href="/components/NavBar">
+                    <Button>
                         Home
-                    </a>
-                    <a>
+                    </Button>
+                </Link>
+                    <Button>
                         Chat
-                    </a>
-                    <a>
+                    </Button>
+                    <Button>
                         Social
-                    </a>
+                    </Button>
                 </nav>
             <div className='flex flex-col items-between h-full'>
                 <div className='flex flex-col'> 

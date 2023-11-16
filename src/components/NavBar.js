@@ -4,39 +4,30 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import Link from "next/link.js";
 
-const NavBar = () => {
-  const [user] = useAuthState(auth);
-
-  const googleSignIn = () => {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider);
-  };
-
-  const signOut = () => {
-    auth.signOut();
-  };
+const NavBar = ({ user }) => {
+    const userName = user.displayName
 
 
   return (
     <>
-      <nav className="nav-bar">
-          <Link  href="/Chat">
-              <button>
-                  Go To React Chat
-              </button>
-          </Link>
-        {user ? (
-          <button onClick={signOut} className="sign-out" type="button">
-            Sign Out
-          </button>
-        ) : (
-          <button onClick={googleSignIn} className="sign-in">
-              sign in with google
-          </button>
-        )}
+      <nav>
+      <Link href="/components/NavBar">
+                    <Button>
+                        Home
+                    </Button>
+                </Link>
+                    <Button>
+                        Chat
+                    </Button>
+                    <Button>
+                        Social
+                    </Button>
       </nav>
+      <div>
+        Welcome {userName}
+      </div>
     </>
-  );
+  )
 };
 
 export default NavBar;
