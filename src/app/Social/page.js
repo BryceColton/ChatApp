@@ -2,9 +2,10 @@
 
 import React from "react";
 import { useState } from "react";
-import { Auth } from "./Auth";
-import Chat from "./Chat";
-import NavBar from "./NavBar";
+import { Auth } from "../page";
+import Link from "next/link"
+
+
 
 
 
@@ -17,11 +18,12 @@ function App() {
 
   return (
     <div className="flex justify-center h-screen">
-      {user ? (
-        <NavBar user={user} />
-      ) : (
-        <Auth onSignIn={handleSignIn} /> 
-      )}
+      
+      <Auth onSignIn={handleSignIn} /> 
+      <Link href="/Chat">
+          Chat
+      </Link>
+      
     </div>
   );
 }

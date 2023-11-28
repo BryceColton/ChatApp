@@ -1,31 +1,32 @@
 import React from "react";
-import { auth } from "../app/firebase.js";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import Link from "next/link.js";
+import {Button, ButtonGroup} from "@nextui-org/react";
+import Link from "next/link"
 
-const NavBar = ({ user }) => {
-    const userName = user.displayName
+
+const NavBar = () => {
+    // const userName = user.displayName
 
 
   return (
     <>
-      <nav>
-      <Link href="/components/NavBar">
+      <nav className="flex justify-around">
+                <Link href="/">
                     <Button>
                         Home
                     </Button>
                 </Link>
+                <Link href="/Chat">
                     <Button>
                         Chat
                     </Button>
+                </Link>
+                <Link href="#">
                     <Button>
                         Social
                     </Button>
+                </Link>
       </nav>
-      <div>
-        Welcome {userName}
-      </div>
+   
     </>
   )
 };
