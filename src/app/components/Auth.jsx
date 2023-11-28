@@ -21,7 +21,8 @@ const Auth = ({ onSignIn }) => {
           await setDoc(userDocRef, {
             displayName: user.displayName,
             email: user.email,
-            photo: user.photoURL
+            photo: user.photoURL,
+            uID: user.uid
             // Add any other user data you want to store
           });
       } catch (error) {
