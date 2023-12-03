@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { collection, setDoc, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase.js'; // Import your Firestore instance
-import User from './User.jsx' 
 import UserList from './Userlist.jsx'
 import {Button} from "@nextui-org/react";
 import {Input} from "@nextui-org/react";
@@ -26,15 +25,17 @@ const Chat = ({ user }) => {
       // Display an error message or prevent sending without a recipient
       return;
     }
-
+  
     console.log('User UID:', user.uid);
     console.log('Recipient UID:', recipient.id);
   
     if (message.trim() !== '') {
       try {
-        console.log("we made it send")
-        
-        await setDoc(doc(db, `personalMessages/${user.uid}_${recipient.id}`), {
+        console.log("we made it send");
+  
+        const messageId = `${user.uid}_${recipient.id}_${new Date().getTime()}_${Math.random().toString(36).substring(2)}`;
+  
+        await setDoc(doc(db, 'personalMessages', messageId), {
           text: message,
           timestamp: new Date(),
           sender: user.displayName,
@@ -42,7 +43,7 @@ const Chat = ({ user }) => {
           recipient: recipient.displayName,
           recipientid: recipient.id,
         });
-        
+  
         setMessage(''); // Clear the input field after sending
       } catch (error) {
         console.error('Error sending message:', error);
@@ -51,25 +52,38 @@ const Chat = ({ user }) => {
   };
 
   useEffect(() => {
-    console.log(`User:`, user)
-    console.log(`recipient`, recipient)
+    if (!recipient || !user) {
+      return; // No recipient selected or user not logged in, do nothing
+    }
+  
+    const userUid = user.uid;
+    const recipientId = recipient.id;
+  
     const unsubscribe = onSnapshot(
       collection(db, 'personalMessages'),
       (snapshot) => {
-        setMessages(
-          snapshot.docs
-            .filter((doc) => {
-              const isUserInDoc = user && doc.id.includes(user.uid);
-              const isRecipientInDoc = recipient && doc.id.includes(recipient.id);
-              return isUserInDoc || isRecipientInDoc;
-            })
-            .map((doc) => ({ id: doc.id, ...doc.data() }))
-        );
+        const newMessages = snapshot.docs
+          .filter((doc) => {
+            const participants = doc.id.split('_');
+            return (
+              participants.includes(userUid) && participants.includes(recipientId)
+            );
+          })
+          .map((doc) => ({ id: doc.id, ...doc.data() }))
+          .sort((a, b) => a.timestamp - b.timestamp)
+          .reverse(); // Reverse the order to have the latest messages first
+  
+        console.log('New Messages:', newMessages);
+  
+        setMessages(newMessages);
       }
     );
   
     return () => unsubscribe();
   }, [user, recipient]);
+  
+  
+  
 
   return (
     <div className='flex justify-center h-screen w-full'>

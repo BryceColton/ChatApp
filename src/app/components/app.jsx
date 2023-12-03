@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Auth from "./Auth";
 import Chat from "./Chat";
+import GroupChat from './groupChat';
 
 
 export default function App() {
@@ -32,6 +33,7 @@ export default function App() {
       ) : (
         <Auth onSignIn={handleSignIn} loading={loading} />
       )}
+
     </div>
   );
 }
