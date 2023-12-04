@@ -9,12 +9,10 @@ const Auth = ({ onSignIn }) => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // Call the onSignIn callback if provided
       if (onSignIn) {
         onSignIn(user);
       }
 
-      // Store the user data in Firestore
       try {
        
           const userDocRef = doc(collection(db, 'users'), user.uid);

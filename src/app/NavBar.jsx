@@ -17,12 +17,12 @@ const NavBar = () => {
                 </Link>
                 <Link href="/Chat">
                     <Button>
-                        Chat
+                        PersonalChat
                     </Button>
                 </Link>
-                <Link href="#">
+                <Link href="/GroupChat">
                     <Button>
-                        Social
+                        GroupChat
                     </Button>
                 </Link>
       </nav>

@@ -5,10 +5,13 @@ import { db } from '../firebase.js'; // Import your Firestore instance
 import UserList from './Userlist.jsx'
 import {Button} from "@nextui-org/react";
 import {Input} from "@nextui-org/react";
+import GroupChat from './GroupChat.jsx'
+import { useUser } from './UserContext.js'
 
 
 
-const Chat = ({ user }) => {
+const Chat = () => {
+  const { user } = useUser();
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
 

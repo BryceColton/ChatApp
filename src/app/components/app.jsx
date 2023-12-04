@@ -1,8 +1,9 @@
+// App.jsx
 import React, { useState } from 'react';
-import Auth from "./Auth";
-import Chat from "./Chat";
-import GroupChat from './groupChat';
-
+import Auth from './Auth';
+import Chat from './Chat';
+import GroupChat from './GroupChat';
+import { UserProvider } from './UserContext'; // Assuming UserContext is in the same directory
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -10,7 +11,6 @@ export default function App() {
 
   const handleSignIn = async (user) => {
     try {
-      // Optionally, perform any additional actions before setting the user state.
       setLoading(true);
       setUser(user);
       console.log(user);
@@ -22,18 +22,20 @@ export default function App() {
   };
 
   const handleSignOut = () => {
-    // Implement sign-out logic if needed
     setUser(null);
   };
 
   return (
-    <div className='w-full'>
-      {user ? (
-        <Chat user={user} onSignOut={handleSignOut} />
-      ) : (
-        <Auth onSignIn={handleSignIn} loading={loading} />
-      )}
-
-    </div>
+    <UserProvider user={user}>
+      <div className="w-full">
+        {user ? (
+          <>
+            <GroupChat user={user} onSignOut={handleSignOut} />
+          </>
+        ) : (
+          <Auth onSignIn={handleSignIn} loading={loading} />
+        )}
+      </div>
+    </UserProvider>
   );
 }

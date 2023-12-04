@@ -1,7 +1,7 @@
 // ChatPage.jsx
 'use client'
 import React, { useEffect, useState } from 'react';
-import Chat from "../components/Chat.jsx";
+import GroupChat from "../components/GroupChat.jsx";
 import { UserProvider } from '../components/UserContext.js';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase.js';
@@ -20,7 +20,7 @@ export default function ChatPage() {
 
   return (
     <UserProvider user={user}>
-      <Chat />
+      <GroupChat />
     </UserProvider>
   );
 }
