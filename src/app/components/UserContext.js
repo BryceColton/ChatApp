@@ -4,7 +4,6 @@ import React, { createContext, useContext } from 'react';
 const UserContext = createContext();
 
 export const UserProvider = ({ user, children }) => {
-  console.log('UserProvider user:', user);
   return (
     <UserContext.Provider value={{ user }}>
       {children}

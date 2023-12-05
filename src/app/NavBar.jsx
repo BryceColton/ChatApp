@@ -1,6 +1,5 @@
 import React from "react";
-import {Button, ButtonGroup} from "@nextui-org/react";
-import Link from "next/link"
+import {Link, Button} from "@nextui-org/react";
 
 
 const NavBar = () => {

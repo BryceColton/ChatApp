@@ -2,6 +2,8 @@ import React from 'react';
 import { auth, provider, db } from "../firebase.js";
 import { signInWithPopup } from "firebase/auth";
 import { collection, doc, setDoc } from 'firebase/firestore';
+import GoogleSignin from "../img/btn_google_signin_dark_pressed_web.png";
+import { Button } from "@nextui-org/react"
 
 const Auth = ({ onSignIn }) => {
   const signInWithGoogle = async () => {
@@ -32,13 +34,11 @@ const Auth = ({ onSignIn }) => {
   };
 
   return (
-    <div className="bg-white text-black sign-in-container">
-      {/* Uncomment the following lines if using an image for sign-in */}
-      {/* <img onClick={signInWithGoogle} src={GoogleSignin} alt="Google Sign In" /> */}
-      
-      {/* Button for Google sign-in */}
-      <button onClick={signInWithGoogle}>Sign In With Google</button>
-    </div>
+    <div className="flex h-screen justify-center items-center text-white">
+      <Button className="sign-in" onClick={signInWithGoogle}>
+        SIGN IN WITH GOOGLE
+      </Button>   
+   </div>
   );
 };
 

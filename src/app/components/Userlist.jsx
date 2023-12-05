@@ -28,7 +28,7 @@ const UserList = ({ user, onSelectRecipient }) => {
     <div className='user-list w-full'>
       <ul>
         {users.map((u) => (
-          <li className='flex justify-center items-center hover:bg-slate-600 cursor-pointer' key={u.id} onClick={() => onSelectRecipient(u)}>
+          <li className='flex justify-center items-center hover:bg-slate-200 hover:text-black hover:font-extrabold cursor-pointer' key={u.id} onClick={() => onSelectRecipient(u)}>
           
             <img
               src={u.photo}
