@@ -15,7 +15,6 @@ const Chat = () => {
   const { user } = useUser();
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-
   const [recipient, setRecipient] = useState(null);
   const [userListVisible, setUserListVisible] = useState(true);
 
@@ -27,7 +26,6 @@ const Chat = () => {
   
   const sendMessage = async () => {
     if (!recipient) {
-      // Display an error message or prevent sending without a recipient
       return;
     }
   
@@ -50,7 +48,7 @@ const Chat = () => {
           senderPhotoURL: user.photoURL,
         });
   
-        setMessage(''); // Clear the input field after sending
+        setMessage(''); 
       } catch (error) {
         console.error('Error sending message:', error);
       }
@@ -59,7 +57,7 @@ const Chat = () => {
 
   useEffect(() => {
     if (!recipient || !user) {
-      return; // No recipient selected or user not logged in, do nothing
+      return; 
     }
   
     const userUid = user.uid;
@@ -101,7 +99,7 @@ const Chat = () => {
         <div className="w-8" /> 
       </div>
 
-      {/* User list and chat messages */}
+     
       <div className="flex-grow flex">
         {userListVisible && (
           <div className="w-1/4 bg-slate-600 overflow-auto">

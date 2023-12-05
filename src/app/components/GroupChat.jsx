@@ -16,6 +16,7 @@ const GroupChat = () => {
   const [groupMessages, setGroupMessages] = useState([]);
   const [userListVisible, setUserListVisible] = useState(true);
 
+  // fetches messages on current snapshot with firebase
   useEffect(() => {
     const fetchGroupMessages = () => {
       const unsubscribe = onSnapshot(collection(db, 'messages'), (snapshot) => {
@@ -48,7 +49,7 @@ const GroupChat = () => {
           senderPhotoURL: user.photoURL, 
         });
 
-        setMessage(''); // Clear the input field after sending
+        setMessage(''); 
       } catch (error) {
         console.error('Error sending group message:', error);
       }
@@ -62,8 +63,8 @@ const GroupChat = () => {
   return (
     <div className="h-screen w-full flex flex-col">
       <div className="bg-gray-800 p-4 flex items-center justify-between">
-        <GiHamburgerMenu className="text-white text-2xl cursor-pointer" onClick={toggleUserList} />
-        <span className="text-white text-xl">GroupChat</span>
+        <GiHamburgerMenu className="text-white w-1/5 text-2xl cursor-pointer" onClick={toggleUserList} />
+        <span className="text-white w-1/2 text-xl">GroupChat</span>
       </div>
     <div className="flex-grow flex">
         {userListVisible && (
