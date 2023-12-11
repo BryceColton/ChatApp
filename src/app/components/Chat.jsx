@@ -1,5 +1,5 @@
 // Chat.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import { collection, setDoc, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase.js'; // Import your Firestore instance
 import UserList from './Userlist.jsx'
@@ -11,44 +11,70 @@ import { GiHamburgerMenu } from "react-icons/gi";
 
 
 
+const SET_MESSAGE = 'SET_MESSAGE';
+const SET_RECIPIENT = 'SET_RECIPIENT';
+const SEND_MESSAGE = 'SEND_MESSAGE';
+const UPDATE_MESSAGES = 'UPDATE_MESSAGES';
+
+// Reducer function
+const chatReducer = (state, action) => {
+  switch (action.type) {
+    case SET_MESSAGE:
+      return { ...state, message: action.payload };
+    case SET_RECIPIENT:
+      return { ...state, recipient: action.payload };
+    case SEND_MESSAGE:
+
+      return { ...state, message: '' };
+    case UPDATE_MESSAGES:
+
+      return { ...state, messages: action.payload };
+
+    default:
+      return state;
+  }
+};
+
+const initialState = {
+  message: '',
+  messages: [],
+  recipient: null,
+  userListVisible: true,
+};
+
 const Chat = () => {
   const { user } = useUser();
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([]);
-  const [recipient, setRecipient] = useState(null);
-  const [userListVisible, setUserListVisible] = useState(true);
+  const [state, dispatch] = useReducer(chatReducer, initialState);
 
   const onSelectRecipient = (selectedUser) => {
-    setRecipient(selectedUser);
-    console.log("recipient", recipient)
+    dispatch({ type: SET_RECIPIENT, payload: selectedUser });
   };
-  
-  
+
   const sendMessage = async () => {
-    if (!recipient) {
+    if (!state.recipient) {
       return;
     }
-  
+
     console.log('User UID:', user.uid);
-    console.log('Recipient UID:', recipient.id);
-  
-    if (message.trim() !== '') {
+    console.log('Recipient UID:', state.recipient.id);
+
+    if (state.message.trim() !== '') {
       try {
         console.log("we made it send");
-  
-        const messageId = `${user.uid}_${recipient.id}_${new Date().getTime()}_${Math.random().toString(36).substring(2)}`;
-  
+
+        const messageId = `${user.uid}_${state.recipient.id}_${new Date().getTime()}_${Math.random().toString(36).substring(2)}`;
+
         await setDoc(doc(db, 'personalMessages', messageId), {
-          text: message,
+          text: state.message,
           timestamp: new Date(),
           sender: user.displayName,
           senderUid: user.uid,
-          recipient: recipient.displayName,
-          recipientid: recipient.id,
+          recipient: state.recipient.displayName,
+          recipientid: state.recipient.id,
           senderPhotoURL: user.photoURL,
         });
-  
-        setMessage(''); 
+
+        dispatch({ type: SEND_MESSAGE });
       } catch (error) {
         console.error('Error sending message:', error);
       }
@@ -56,13 +82,13 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    if (!recipient || !user) {
-      return; 
+    if (!state.recipient || !user) {
+      return;
     }
-  
+
     const userUid = user.uid;
-    const recipientId = recipient.id;
-  
+    const recipientId = state.recipient.id;
+
     const unsubscribe = onSnapshot(
       collection(db, 'personalMessages'),
       (snapshot) => {
@@ -74,22 +100,22 @@ const Chat = () => {
             );
           })
           .map((doc) => ({ id: doc.id, ...doc.data() }))
-          .sort((a, b) => a.timestamp - b.timestamp)
-          .reverse(); // Reverse the order to have the latest messages first
-  
+          .sort((a, b) => b.timestamp - a.timestamp)
+          .reverse(); 
+
         console.log('New Messages:', newMessages);
-  
-        setMessages(newMessages);
+
+        dispatch({ type: UPDATE_MESSAGES, payload: newMessages });
       }
     );
-  
+
     return () => unsubscribe();
-  }, [user, recipient]);
-  
+  }, [user, state.recipient]);
+
   const toggleUserList = () => {
-    setUserListVisible(!userListVisible);
+    dispatch({ type: TOGGLE_USER_LIST });
   };
-  
+
 
   return (
     <div className="flex flex-col h-screen w-full">
@@ -99,15 +125,14 @@ const Chat = () => {
         <div className="w-8" /> 
       </div>
 
-     
       <div className="flex-grow flex">
-        {userListVisible && (
+        {state.userListVisible && (
           <div className="w-1/4 bg-slate-600 overflow-auto">
             <UserList user={user} onSelectRecipient={onSelectRecipient} />
           </div>
         )}
         <div className="flex-grow p-4">
-          {messages.map((msg) => (
+          {state.messages.map((msg) => (
             <div
               key={msg.id}
               className={`flex flex-col items-${msg.senderUid === user.uid ? 'end' : 'start'} justify-center`}
@@ -136,8 +161,8 @@ const Chat = () => {
               <Input
                 type="text"
                 className="w-full opacity-75 bg-slate-800"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                value={state.message}
+                onChange={(e) => dispatch({ type: SET_MESSAGE, payload: e.target.value })}
                 label="Send Message"
               />
             </div>
@@ -154,4 +179,5 @@ const Chat = () => {
     </div>
   );
 };
+
 export default Chat;
